@@ -23,6 +23,29 @@ function handleCardCreate(event) {
 	}
 }
 
+function handleListEdit(event) {
+	var $listContainer = event.target.parentNode.parentNode;
+	var listId = Number($listContainer.getAttribute("data-id"));
+
+	var listTitle = prompt("New List Title") || "";
+
+	if (listTitle.trim()) {
+		board.editList(listId, listTitle);
+		renderBoard();
+	}
+}
+
+function handleCardEdit(event) {
+	var cardId = Number(event.target.getAttribute("data-id"));
+
+	var cardText = prompt("New Card Text") || "";
+
+	if (cardText.trim()) {
+		board.editCard(cardId, cardText);
+		renderBoard();
+	}
+}
+
 function renderBoard() {
 	$boardContainer.innerHTML = "";
 	board.lists.forEach(function(list) {
@@ -34,6 +57,7 @@ function renderBoard() {
 
 		var $headerButton = document.createElement("button");
 		$headerButton.textContent = list.title;
+		$headerButton.addEventListener("click", handleListEdit);
 
 		var $cardUl = document.createElement("ul");
 
@@ -43,6 +67,8 @@ function renderBoard() {
 			var $cardButton = document.createElement("button");
 
 			$cardButton.textContent = card.text;
+			$cardButton.setAttribute("data-id", card.id);
+			$cardButton.addEventListener("click", handleCardEdit);
 
 			$cardLi.appendChild($cardButton);
 			$cardUl.appendChild($cardLi);
